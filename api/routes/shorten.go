@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/adijha/url-shortner/helpers"
+	"github.com/gofiber/fiber/v2"
 )
 
 type request struct {

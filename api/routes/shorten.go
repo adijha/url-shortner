@@ -3,8 +3,7 @@ package routes
 import (
 	"time"
 
-	"github.com/aquasecurity/libbpfgo/helpers"
-	"github.com/thedevsaddam/govalidator"
+	"github.com/adijha/url-shortner/helpers"
 )
 
 type request struct {

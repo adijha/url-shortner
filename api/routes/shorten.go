@@ -80,7 +80,7 @@ func ShortenURL(c *fiber.Ctx) error {
 	val, _ = r.Get(database.Ctx, id).Result()
 
 	if val != "" {
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Your custom shorl URL is already in use!"})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Your custom short URL is already in use!"})
 	}
 
 	if body.Expiry == 0 {

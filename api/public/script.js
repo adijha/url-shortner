@@ -9,3 +9,8 @@
 // 		copyText.classList.remove('active')
 // 	}, 2500)
 // })
+
+function shortenURL(e) {
+	// e.preventDefault()
+	console.log(e)
+}

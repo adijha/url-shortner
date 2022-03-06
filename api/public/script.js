@@ -4,15 +4,20 @@ function validateUrl(url) {
 	return regexp.test(url)
 }
 
-function makeRequest(method, url, callback) {
-	var xhr = new XMLHttpRequest()
-	xhr.open(method, url, true)
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4) {
-			callback(xhr.responseText)
-		}
-	}
-	xhr.send()
+function makeRequest(payload) {
+	fetch(payload.url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(payload.body),
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.error) {
+				alert(data.error)
+			} else {
+				alert(data.short_url)
+			}
+		})
 }
 
 // for (let i = 0; i < 3; i++) {
@@ -25,13 +30,13 @@ function generatePayload(elements) {
 	for (let i = 0; i < 3; i++) {
 		body[elements[i].name] = elements[i].value
 	}
-	if (!validateUrl(body['long-url'])) {
+	if (!validateUrl(body['url'])) {
 		alert('Please enter  a valid URL')
 		return
 	}
 
 	var payload = {
-		url: '/api/v1',
+		url: 'http://localhost/api/v1',
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -60,17 +65,16 @@ form.addEventListener('submit', async (event) => {
 	const payload = generatePayload(form.elements)
 
 	console.log(payload)
-	return
-	const response = await makeRequest('POST', '/api/v1/shorten', payload)
+	const response = await makeRequest(payload)
 
 	console.log(response)
 
-	if (response.status === 200) {
-		const data = await response.json()
-		const shortUrl = data.shortUrl
-		const shortUrlEl = document.getElementById('short-url')
-		shortUrlEl.innerHTML = shortUrl
-		shortUrlEl.href = shortUrl
-		shortUrlEl.style.display = 'block'
-	}
+	// if (response.status === 200) {
+	// 	const data = await response.json()
+	// 	const shortUrl = data.shortUrl
+	// 	const shortUrlEl = document.getElementById('short-url')
+	// 	shortUrlEl.innerHTML = shortUrl
+	// 	shortUrlEl.href = shortUrl
+	// 	shortUrlEl.style.display = 'block'
+	// }
 })

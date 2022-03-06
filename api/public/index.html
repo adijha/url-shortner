@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>URL Shortner</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="./script.js"></script>
+
   </head>
 
   <body>
@@ -52,10 +52,10 @@
             <div class="formbg">
               <div class="formbg-inner padding-horizontal--48">
                 <span class="padding-bottom--15">Short your URL for free</span>
-                <form id="stripe-login" onsubmit="return false">
+                <form id="shorten-form">
                   <div class="field padding-bottom--24">
                     <label for="long-url">Paste your link here</label>
-                    <input type="text" name="long-url">
+                    <input type="text" required name="long-url">
                   </div>
                   <div class="field padding-bottom--24">
                     <div class="grid--50-50">
@@ -96,5 +96,6 @@
       </div>
     </div>
   </body>
+  <script src="./script.js"></script>
 
 </html>

@@ -10,7 +10,12 @@
 // 	}, 2500)
 // })
 
-function shortenURL(e) {
-	// e.preventDefault()
-	console.log(e)
-}
+const form = document.getElementById('shorten-form')
+
+
+form.addEventListener('submit', (event) => {
+	// handle the form data
+	event.preventDefault()
+	const data = event.target
+	console.log(event)
+})

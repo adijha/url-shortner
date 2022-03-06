@@ -4,26 +4,12 @@ function validateUrl(url) {
 	return regexp.test(url)
 }
 
-function makeRequest(payload) {
-	fetch(payload.url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(payload.body),
-	})
-		.then((response) => response.json())
-		.then((data) => {
-			if (data.error) {
-				alert(data.error)
-			} else {
-				alert(data.short_url)
-			}
-		})
+function makeRequest(requestOptions) {
+	fetch('http://localhost/api/v1/', requestOptions)
+		.then((response) => response.text())
+		.then((result) => console.log(result))
+		.catch((error) => console.log('error', error))
 }
-
-// for (let i = 0; i < 3; i++) {
-// 	const element = form.elements[i]
-// 	console.log(element)
-// }
 
 function generatePayload(elements) {
 	const body = {}
@@ -35,13 +21,21 @@ function generatePayload(elements) {
 		return
 	}
 
+	var myHeaders = new Headers()
+	myHeaders.append('Content-Type', 'application/json')
+
+	// var raw = JSON.stringify(body)
+	console.log(elements[2].value)
+	var raw = JSON.stringify({
+		url: elements[0].value,
+		short: elements[1].value,
+		expiry: Number(elements[2].value),
+	})
 	var payload = {
-		url: 'http://localhost/api/v1',
 		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body,
+		headers: myHeaders,
+		body: raw,
+		redirect: 'follow',
 	}
 	return payload
 }
@@ -51,16 +45,6 @@ const form = document.getElementById('shorten-form')
 form.addEventListener('submit', async (event) => {
 	// handle the form data
 	event.preventDefault()
-
-	// const longUrl = form.elements['long-url'].value
-	// const slug = form.elements['slug'].value
-	// const expiry = form.elements['expiry'].value
-
-	// check if the url is valid
-	// if (!validateUrl(longUrl)) {
-	// 	alert('Please enter a valid URL')
-	// 	return
-	// }
 
 	const payload = generatePayload(form.elements)
 

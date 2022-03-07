@@ -4,11 +4,43 @@ function validateUrl(url) {
 	return regexp.test(url)
 }
 
-function makeRequest(requestOptions) {
-	fetch('http://localhost/api/v1/', requestOptions)
-		.then((response) => response.text())
-		.then((result) => console.log(result))
-		.catch((error) => console.log('error', error))
+function showShortURL(result) {
+	if (result.short) {
+		var shortURL = document.getElementById('short-url')
+		shortURL.innerHTML = result.short
+	} else {
+		alert('Error, please try again')
+	}
+}
+
+async function makeRequest(requestOptions) {
+	// getDevices = async () => {
+	// 	const location = window.location.hostname
+	// 	const settings = {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			Accept: 'application/json',
+	// 			'Content-Type': 'application/json',
+	// 		},
+	// 	}
+	// 	try {
+	// 		const fetchResponse = await fetch(
+	// 			`http://${location}:9000/api/sensors/`,
+	// 			settings
+	// 		)
+	// 		const data = await fetchResponse.json()
+	// 		return data
+	// 	} catch (e) {
+	// 		return e
+	// 	}
+	// }
+
+	// fetch('http://localhost/api/v1/', requestOptions)
+	// 	.then((response) => response.text())
+	// 	.then((result) => result)
+	// 	.catch((error) => console.log('error', error))
+
+	return await fetch('http://localhost/api/v1/', requestOptions)
 }
 
 function generatePayload(elements) {
@@ -48,17 +80,16 @@ form.addEventListener('submit', async (event) => {
 
 	const payload = generatePayload(form.elements)
 
-	console.log(payload)
 	const response = await makeRequest(payload)
+	const result = await response.json()
 
-	console.log(response)
-
-	// if (response.status === 200) {
-	// 	const data = await response.json()
-	// 	const shortUrl = data.shortUrl
-	// 	const shortUrlEl = document.getElementById('short-url')
-	// 	shortUrlEl.innerHTML = shortUrl
-	// 	shortUrlEl.href = shortUrl
-	// 	shortUrlEl.style.display = 'block'
-	// }
+	const shortUrl = result?.short
+	console.log(shortUrl)
+	if (shortUrl) {
+		const shortUrlEl = document.getElementById('short-url')
+		shortUrlEl.innerHTML = shortUrl
+		shortUrlEl.value = shortUrl
+		shortUrlEl.href = shortUrl
+		shortUrlEl.style.display = 'block'
+	}
 })

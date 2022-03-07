@@ -20,7 +20,6 @@ function generatePayload(elements) {
 	var myHeaders = new Headers()
 	myHeaders.append('Content-Type', 'application/json')
 
-	// var raw = JSON.stringify(body)
 	console.log(elements[2].value)
 	var raw = JSON.stringify({
 		url: elements[0].value,
@@ -38,8 +37,16 @@ function generatePayload(elements) {
 
 const form = document.getElementById('shorten-form')
 
+function showShortUrl(shortUrl) {
+	const shortUrlEl = document.getElementById('short-url')
+	const shortUrlWrapper = document.getElementById('short-url-wrapper')
+	shortUrlEl.innerHTML = shortUrl
+	shortUrlEl.value = shortUrl
+	shortUrlEl.href = shortUrl
+	shortUrlWrapper.style.display = 'block'
+}
+
 form.addEventListener('submit', async (event) => {
-	// handle the form data
 	event.preventDefault()
 	const payload = generatePayload(form.elements)
 	try {
@@ -47,12 +54,7 @@ form.addEventListener('submit', async (event) => {
 		const result = await response.json()
 		const shortUrl = result?.short
 		if (shortUrl) {
-			const shortUrlEl = document.getElementById('short-url')
-			const shortUrlWrapper = document.getElementById('short-url-wrapper')
-			shortUrlEl.innerHTML = shortUrl
-			shortUrlEl.value = shortUrl
-			shortUrlEl.href = shortUrl
-			shortUrlWrapper.style.display = 'block'
+			showShortUrl(shortUrl)
 		}
 	} catch (error) {
 		alert(error)

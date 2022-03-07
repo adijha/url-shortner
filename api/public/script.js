@@ -87,9 +87,10 @@ form.addEventListener('submit', async (event) => {
 	console.log(shortUrl)
 	if (shortUrl) {
 		const shortUrlEl = document.getElementById('short-url')
+		const shortUrlWrapper = document.getElementById('short-url-wrapper')
 		shortUrlEl.innerHTML = shortUrl
 		shortUrlEl.value = shortUrl
 		shortUrlEl.href = shortUrl
-		shortUrlEl.style.display = 'block'
+		shortUrlWrapper.style.display = 'block'
 	}
 })

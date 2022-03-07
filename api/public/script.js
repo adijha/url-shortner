@@ -13,35 +13,8 @@ function showShortURL(result) {
 	}
 }
 
-async function makeRequest(requestOptions) {
-	// getDevices = async () => {
-	// 	const location = window.location.hostname
-	// 	const settings = {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			Accept: 'application/json',
-	// 			'Content-Type': 'application/json',
-	// 		},
-	// 	}
-	// 	try {
-	// 		const fetchResponse = await fetch(
-	// 			`http://${location}:9000/api/sensors/`,
-	// 			settings
-	// 		)
-	// 		const data = await fetchResponse.json()
-	// 		return data
-	// 	} catch (e) {
-	// 		return e
-	// 	}
-	// }
-
-	// fetch('http://localhost/api/v1/', requestOptions)
-	// 	.then((response) => response.text())
-	// 	.then((result) => result)
-	// 	.catch((error) => console.log('error', error))
-
-	return await fetch('http://localhost/api/v1/', requestOptions)
-}
+const makeRequest = async (requestOptions) =>
+	await fetch('http://localhost/api/v1/', requestOptions)
 
 function generatePayload(elements) {
 	const body = {}
@@ -77,14 +50,10 @@ const form = document.getElementById('shorten-form')
 form.addEventListener('submit', async (event) => {
 	// handle the form data
 	event.preventDefault()
-
 	const payload = generatePayload(form.elements)
-
 	const response = await makeRequest(payload)
 	const result = await response.json()
-
 	const shortUrl = result?.short
-	console.log(shortUrl)
 	if (shortUrl) {
 		const shortUrlEl = document.getElementById('short-url')
 		const shortUrlWrapper = document.getElementById('short-url-wrapper')

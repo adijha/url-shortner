@@ -4,15 +4,6 @@ function validateUrl(url) {
 	return regexp.test(url)
 }
 
-function showShortURL(result) {
-	if (result.short) {
-		var shortURL = document.getElementById('short-url')
-		shortURL.innerHTML = result.short
-	} else {
-		alert('Error, please try again')
-	}
-}
-
 const makeRequest = async (requestOptions) =>
 	await fetch('http://localhost/api/v1/', requestOptions)
 
@@ -51,15 +42,19 @@ form.addEventListener('submit', async (event) => {
 	// handle the form data
 	event.preventDefault()
 	const payload = generatePayload(form.elements)
-	const response = await makeRequest(payload)
-	const result = await response.json()
-	const shortUrl = result?.short
-	if (shortUrl) {
-		const shortUrlEl = document.getElementById('short-url')
-		const shortUrlWrapper = document.getElementById('short-url-wrapper')
-		shortUrlEl.innerHTML = shortUrl
-		shortUrlEl.value = shortUrl
-		shortUrlEl.href = shortUrl
-		shortUrlWrapper.style.display = 'block'
+	try {
+		const response = await makeRequest(payload)
+		const result = await response.json()
+		const shortUrl = result?.short
+		if (shortUrl) {
+			const shortUrlEl = document.getElementById('short-url')
+			const shortUrlWrapper = document.getElementById('short-url-wrapper')
+			shortUrlEl.innerHTML = shortUrl
+			shortUrlEl.value = shortUrl
+			shortUrlEl.href = shortUrl
+			shortUrlWrapper.style.display = 'block'
+		}
+	} catch (error) {
+		alert(error)
 	}
 })

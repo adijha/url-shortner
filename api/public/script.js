@@ -1,7 +1,7 @@
 const endpoint =
 	window.location.host === '127.0.0.1:5500'
 		? 'http://localhost/api/v1'
-		: '/api/shorten'
+		: 'http://20.40.56.135/api/shorten'
 
 function validateUrl(url) {
 	var regexp =

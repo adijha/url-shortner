@@ -1,35 +1,36 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-
 	"github.com/adijha/url-shortner/routes"
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/joho/godotenv"
 )
 
 func setupRoutes(app *fiber.App) {
+
 	app.Static("/", "./public")
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/shorten", routes.ShortenURL)
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println(err)
-	}
 
-	app := fiber.New()
+	router := gin.Default()
+	router.Static("/", "./public")
+	// router.GET("/add/:x/:y", add)
+	router.Run(":80")
 
-	app.Use(logger.New())
-	app.Use(cors.New())
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	setupRoutes(app)
+	// app := fiber.New()
 
-	log.Fatal(app.Listen(os.Getenv("APP_PORT")))
+	// app.Use(logger.New())
+	// app.Use(cors.New())
+
+	// setupRoutes(app)
+
+	// log.Fatal(app.Listen(os.Getenv("APP_PORT")))
 }

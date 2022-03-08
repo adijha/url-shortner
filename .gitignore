@@ -1,5 +1,6 @@
 .env
 /api/.env
 .data/
+.data/dump.rdb
 /.data
 dump.rdb

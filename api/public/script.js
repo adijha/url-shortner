@@ -1,8 +1,8 @@
 const endpoint =
 	window.location.host === '127.0.0.1:5500'
-		? 'http://localhost/api/v1'
-		: 'http://20.40.56.135/api/shorten'
-
+		? 'http://localhost/api/shorten'
+		: '/api/shorten'
+console.log(window.location.host)
 function validateUrl(url) {
 	var regexp =
 		/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/

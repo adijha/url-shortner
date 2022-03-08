@@ -60,3 +60,13 @@ form.addEventListener('submit', async (event) => {
 		alert(error)
 	}
 })
+
+function copyShortURL() {
+	var copyText = document.getElementById('short-url')
+	copyToClipboard(copyText.value)
+}
+const copyToClipboard = (str) => {
+	if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+		return navigator.clipboard.writeText(str)
+	return Promise.reject('The Clipboard API is not available.')
+}

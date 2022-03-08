@@ -4,7 +4,7 @@ services:
   api:
     build: api
     ports:
-      - '80:80'
+      - '800:800'
     depends_on:
       - db
 

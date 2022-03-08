@@ -1,3 +1,8 @@
+const endpoint =
+	window.location.host === '127.0.0.1:5500'
+		? 'http://localhost/api/v1'
+		: '/api/shorten'
+
 function validateUrl(url) {
 	var regexp =
 		/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
@@ -5,7 +10,7 @@ function validateUrl(url) {
 }
 
 const makeRequest = async (requestOptions) =>
-	await fetch('http://localhost/api/v1/', requestOptions)
+	await fetch(endpoint, requestOptions)
 
 function generatePayload(elements) {
 	const body = {}

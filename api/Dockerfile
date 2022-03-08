@@ -8,6 +8,8 @@ WORKDIR /build
 
 RUN go version
 
+RUN go mod tidy
+
 RUN go build -o main .
 
 # stage 2

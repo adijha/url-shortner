@@ -5,6 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func main() {
+	router := gin.Default()
+	router.Static("/home", "./public")
+	router.GET("/:url", routes.ResolveURL)
+	router.POST("/api/shorten", routes.ShortenURL)
+	router.Run(":80")
+}
+
 // func setupRoutes(app *fiber.App) {
 
 // 	app.Static("/", "./public")
@@ -12,25 +20,16 @@ import (
 // 	app.Post("/api/shorten", routes.ShortenURL)
 // }
 
-func main() {
+// err := godotenv.Load()
+// if err != nil {
+// 	fmt.Println(err)
+// }
 
-	router := gin.Default()
-	// router.Static("/", "./public")
-	router.GET("/:url", routes.ResolveURL)
-	// router.GET("/add/:x/:y", add)
-	router.Run(":80")
+// app := fiber.New()
 
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+// app.Use(logger.New())
+// app.Use(cors.New())
 
-	// app := fiber.New()
+// setupRoutes(app)
 
-	// app.Use(logger.New())
-	// app.Use(cors.New())
-
-	// setupRoutes(app)
-
-	// log.Fatal(app.Listen(os.Getenv("APP_PORT")))
-}
+// log.Fatal(app.Listen(os.Getenv("APP_PORT")))

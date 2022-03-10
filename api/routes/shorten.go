@@ -41,8 +41,6 @@ func ShortenURL(c *gin.Context) {
 	r2 := database.CreateClient(1)
 	defer r2.Close()
 
-	fmt.Println(c.ClientIP(), "ip")
-
 	val, err := r2.Get(database.Ctx, c.ClientIP()).Result()
 	fmt.Println(val, "val")
 	if err == redis.Nil {
@@ -64,6 +62,14 @@ func ShortenURL(c *gin.Context) {
 	if !govalidator.IsURL(req.URL) {
 		c.JSON(400, gin.H{
 			"error": "Invalid URL!",
+		})
+		return
+	}
+
+	// 	// check for domain error
+	if !helpers.RemoveDomainError(req.URL) {
+		c.JSON(500, gin.H{
+			"error": "You cannot shorten this domain!",
 		})
 		return
 	}
@@ -94,22 +100,14 @@ func ShortenURL(c *gin.Context) {
 		req.Expiry = 24
 	}
 
-	fmt.Printf("%+v\n", req)
+	// fmt.Printf("%+v\n", req)
 
-	if r.Exists(database.Ctx, req.CustomShort).Val() != 0 {
-		c.JSON(400, gin.H{
-			"error": "Custom short URL already exists!",
-		})
-		return
-	}
-
-	// 	// check for domain error
-	if !helpers.RemoveDomainError(req.URL) {
-		c.JSON(500, gin.H{
-			"error": "You cannot shorten this domain!",
-		})
-		return
-	}
+	// if r.Exists(database.Ctx, req.CustomShort).Val() != 0 {
+	// 	c.JSON(400, gin.H{
+	// 		"error": "Custom short URL already exists!",
+	// 	})
+	// 	return
+	// }
 
 	err = r.Set(database.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
 

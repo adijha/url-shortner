@@ -3,17 +3,14 @@ package helpers
 import (
 	"os"
 	"strings"
-	"time"
-
-	"github.com/adijha/url-shortner/database"
 )
 
-func GetRateLimit(r *RedisClient) int {
-	return r.Get(database.Ctx, "rate_limit").Val().(int)
-}
-func GetRateLimitReset(r *RedisClient) time.Duration {
-	return r.Get(database.Ctx, "rate_limit_reset").Val().(time.Duration)
-}
+// func GetRateLimit(r *RedisClient) int {
+// 	return r.Get(database.Ctx, "rate_limit").Val().(int)
+// }
+// func GetRateLimitReset(r *RedisClient) time.Duration {
+// 	return r.Get(database.Ctx, "rate_limit_reset").Val().(time.Duration)
+// }
 
 func EnforceHTTP(url string) string {
 	if url[:4] != "http" {

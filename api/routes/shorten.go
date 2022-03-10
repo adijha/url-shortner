@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/adijha/url-shortner/database"
@@ -33,6 +34,8 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
+	//verify url
+
 	if !govalidator.IsURL(req.URL) {
 		c.JSON(400, gin.H{
 			"error": "Invalid URL!",
@@ -40,8 +43,8 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	r := database.CreateClient(0)
-	defer r.Close()
+	r2 := database.CreateClient(0)
+	defer r2.Close()
 
 	if req.Expiry == 0 {
 		req.Expiry = time.Hour * 24
@@ -51,33 +54,36 @@ func ShortenURL(c *gin.Context) {
 		req.CustomShort = uuid.New().String()
 	}
 
-	if !govalidator.IsUUID(req.CustomShort) {
-		c.JSON(400, gin.H{
-			"error": "Invalid custom short URL!",
-		})
-		return
-	}
+	fmt.Printf("%+v\n", req)
 
-	if r.Exists(database.Ctx, req.CustomShort).Val() {
+	if r2.Exists(database.Ctx, req.CustomShort).Val() != 0 {
 		c.JSON(400, gin.H{
 			"error": "Custom short URL already exists!",
 		})
 		return
 	}
 
-	if r.SetNX(database.Ctx, req.CustomShort, req.URL, req.Expiry).Val() {
-		c.JSON(201, response{
-			URL:             req.URL,
-			CustomShort:     req.CustomShort,
-			Expiry:          req.Expiry,
-			XRateRemaining:  helpers.GetRateLimit(r),
-			XRateLimitReset: helpers.GetRateLimitReset(r),
+	// 	// check for domain error
+	if !helpers.RemoveDomainError(req.URL) {
+		c.JSON(500, gin.H{
+			"error": "You cannot shorten this domain!",
 		})
 		return
 	}
 
-	c.JSON(400, gin.H{
-		"error": "Custom short URL already exists!",
+	if r2.SetNX(database.Ctx, req.CustomShort, req.URL, req.Expiry).Val() {
+		c.JSON(201, response{
+			URL:             req.URL,
+			CustomShort:     req.CustomShort,
+			Expiry:          req.Expiry,
+			XRateRemaining:  10,
+			XRateLimitReset: 10,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Success": "Done everything!",
 	})
 }
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/adijha/url-shortner/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +12,7 @@ func main() {
 	router.Static("/home", "./public")
 	router.GET("/:url", routes.ResolveURL)
 	router.POST("/api/shorten", routes.ShortenURL)
-	router.Run(":80")
+	router.Run(os.Getenv("APP_PORT"))
 }
 
 // func setupRoutes(app *fiber.App) {

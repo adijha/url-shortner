@@ -108,12 +108,12 @@ func ShortenURL(c *gin.Context) {
 	// 	})
 	// 	return
 	// }
-
+fmt.Println(database.Ctx, id, req.URL, req.Expiry*3600*time.Second)
 	err = r.Set(database.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
 
 	if err != nil {
 		c.JSON(500, gin.H{
-			"error": "Cannot connect to server",
+			"error": err,
 		})
 		return
 	}
@@ -135,16 +135,6 @@ func ShortenURL(c *gin.Context) {
 
 	resp.CustomShort = os.Getenv("DOMAIN") + "/" + id
 
-	// if r.SetNX(database.Ctx, req.CustomShort, req.URL, req.Expiry).Val() {
-	// 	c.JSON(201, response{
-	// 		URL:             req.URL,
-	// 		CustomShort:     req.CustomShort,
-	// 		Expiry:          req.Expiry,
-	// 		XRateRemaining:  10,
-	// 		XRateLimitReset: 10,
-	// 	})
-	// 	return
-	// }
 
 	c.JSON(200, resp)
 }

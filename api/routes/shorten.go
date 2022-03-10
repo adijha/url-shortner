@@ -41,11 +41,15 @@ func ShortenURL(c *gin.Context) {
 	r2 := database.CreateClient(1)
 	defer r2.Close()
 
+	fmt.Println(c.ClientIP(), "ip")
+
 	val, err := r2.Get(database.Ctx, c.ClientIP()).Result()
+	fmt.Println(val, "val")
 	if err == redis.Nil {
 		_ = r2.Set(database.Ctx, c.ClientIP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err()
 	} else {
 		valInt, _ := strconv.Atoi(val)
+		fmt.Println(valInt, "valInt")
 		if valInt <= 0 {
 			limit, _ := r2.TTL(database.Ctx, c.ClientIP()).Result()
 			c.JSON(400, gin.H{

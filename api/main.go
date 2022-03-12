@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/adijha/url-shortner/routes"
@@ -15,7 +16,12 @@ func main() {
 		fmt.Println(err)
 	}
 	router := gin.Default()
-	router.Static("/home", "./public")
+	router.Static("/assets", "./public/assets")
+	router.LoadHTMLGlob("./public/index.html")
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
 	router.GET("/:url", routes.ResolveURL)
 	router.POST("/api/shorten", routes.ShortenURL)
 	router.Run(os.Getenv("PORT"))

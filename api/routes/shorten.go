@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -43,7 +44,7 @@ func ShortenURL(c *gin.Context) {
 	val, err := r2.Get(database.Ctx, c.ClientIP()).Result()
 	fmt.Println(val, "val")
 	if err == redis.Nil {
-		_ = r2.Set(database.Ctx, c.ClientIP(), 100, 30*60*time.Second).Err()
+		_ = r2.Set(database.Ctx, c.ClientIP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err()
 	} else {
 		valInt, _ := strconv.Atoi(val)
 		fmt.Println(valInt, "valInt")
@@ -132,7 +133,7 @@ func ShortenURL(c *gin.Context) {
 	ttl, _ := r2.TTL(database.Ctx, c.ClientIP()).Result()
 	resp.XRateLimitReset = ttl / time.Nanosecond / time.Minute
 
-	resp.CustomShort = "localhost" + "/" + id
+	resp.CustomShort = os.Getenv("DOMAIN") + "/" + id
 
 	c.JSON(200, resp)
 }

@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"os"
 	"strings"
 )
 
@@ -12,7 +13,7 @@ func EnforceHTTP(url string) string {
 }
 
 func RemoveDomainError(url string) bool {
-	if url == "localhost" {
+	if url == os.Getenv("DOMAIN") {
 		return false
 	}
 
@@ -21,7 +22,7 @@ func RemoveDomainError(url string) bool {
 	newURL = strings.Replace(newURL, "www.", "", 1)
 	newURL = strings.Split(newURL, "/")[0]
 
-	if newURL == "localhost" {
+	if newURL == os.Getenv("DOMAIN") {
 		return false
 	}
 

@@ -37,7 +37,7 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	// 	// implementing rate limiting
+	// implementing rate limiting
 	r2 := database.CreateClient(1)
 	defer r2.Close()
 
@@ -66,7 +66,7 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	// 	// check for domain error
+	// 	check for domain error
 	if !helpers.RemoveDomainError(req.URL) {
 		c.JSON(500, gin.H{
 			"error": "You cannot shorten this domain!",
@@ -100,14 +100,6 @@ func ShortenURL(c *gin.Context) {
 		req.Expiry = 24
 	}
 
-	// fmt.Printf("%+v\n", req)
-
-	// if r.Exists(database.Ctx, req.CustomShort).Val() != 0 {
-	// 	c.JSON(400, gin.H{
-	// 		"error": "Custom short URL already exists!",
-	// 	})
-	// 	return
-	// }
 	fmt.Println(database.Ctx, id, req.URL, req.Expiry*3600*time.Second)
 	err = r.Set(database.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
 

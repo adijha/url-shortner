@@ -14,3 +14,20 @@ services:
       - '6379:6379'
     volumes:
       - .data:/data
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=urlshortener
+    # volumes:
+    #   - database_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

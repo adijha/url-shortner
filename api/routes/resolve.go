@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"fmt"
-
 	"github.com/adijha/url-shortner/database"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -32,9 +30,3 @@ func ResolveURL(c *gin.Context) {
 
 	c.Redirect(301, val)
 }
-
-
-
-
-
-

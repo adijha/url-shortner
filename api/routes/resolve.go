@@ -30,3 +30,9 @@ func ResolveURL(c *gin.Context) {
 
 	c.Redirect(301, val)
 }
+
+
+
+
+
+

@@ -2,11 +2,27 @@
 package database
 
 import (
-	"fmt"
+	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+// fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+// "postgres", 5432, "user", "mypassword", "user")
+func InitDB() *gorm.DB {
+	dbURL := "postgres://user:mypassword@postgres/user"
+
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// db.AutoMigrate(&models.Book{})
+
+	return db
+}
 
 // func InitDB() *gorm.DB {
 // 	// Load environment variables
@@ -22,21 +38,21 @@ import (
 // 	return db
 // }
 
-func InitDB() *gorm.DB {
+// func InitDB() *gorm.DB {
 
-	// dsn := os.Getenv("POSTGRES_DSN")
-	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=5432 sslmode=disable TimeZone=Asia/Kolkata"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+// 	// dsn := os.Getenv("POSTGRES_DSN")
+// 	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+// 	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=5432 sslmode=disable TimeZone=Asia/Kolkata"
+// 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil {
-		fmt.Println(err)
-	}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
 
-	// dbSQL, err := db.DB()
-	// if err != nil {
-	// 	defer dbSQL.Close()
-	// }
-	// defer dbSQL.Close()
-	return db
-}
+// 	// dbSQL, err := db.DB()
+// 	// if err != nil {
+// 	// 	defer dbSQL.Close()
+// 	// }
+// 	// defer dbSQL.Close()
+// 	return db
+// }

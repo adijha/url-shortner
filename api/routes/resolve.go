@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/adijha/url-shortner/database"
+	"github.com/adijha/url-shortner/cache"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 )
@@ -11,11 +11,11 @@ func ResolveURL(c *gin.Context) {
 	shortURL := c.Param("url")
 
 	// get the redis client
-	r := database.CreateClient(0)
+	r := cache.CreateClient(0)
 	defer r.Close()
 
-	// get the URL from the redis database
-	val, err := r.Get(database.Ctx, shortURL).Result()
+	// get the URL from the redis cache
+	val, err := r.Get(cache.Ctx, shortURL).Result()
 	if err == redis.Nil {
 		c.JSON(404, gin.H{
 			"error": "URL not found!",
@@ -23,7 +23,7 @@ func ResolveURL(c *gin.Context) {
 		return
 	} else if err != nil {
 		c.JSON(500, gin.H{
-			"error": "Cannot connect to database!",
+			"error": "Cannot connect to cache!",
 		})
 		return
 	}

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/adijha/url-shortner/database"
+	"github.com/adijha/url-shortner/cache"
 	"github.com/adijha/url-shortner/helpers"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
@@ -38,18 +38,18 @@ func ShortenURL(c *gin.Context) {
 	}
 
 	// implementing rate limiting
-	r2 := database.CreateClient(1)
+	r2 := cache.CreateClient(1)
 	defer r2.Close()
 
-	val, err := r2.Get(database.Ctx, c.ClientIP()).Result()
+	val, err := r2.Get(cache.Ctx, c.ClientIP()).Result()
 	fmt.Println(val, "val")
 	if err == redis.Nil {
-		_ = r2.Set(database.Ctx, c.ClientIP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err()
+		_ = r2.Set(cache.Ctx, c.ClientIP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err()
 	} else {
 		valInt, _ := strconv.Atoi(val)
 		fmt.Println(valInt, "valInt")
 		if valInt <= 0 {
-			limit, _ := r2.TTL(database.Ctx, c.ClientIP()).Result()
+			limit, _ := r2.TTL(cache.Ctx, c.ClientIP()).Result()
 			c.JSON(400, gin.H{
 				"error":            "Rate limit exceeded!",
 				"rate_limit_reset": limit / time.Nanosecond / time.Minute,
@@ -84,10 +84,10 @@ func ShortenURL(c *gin.Context) {
 		id = req.CustomShort
 	}
 
-	r := database.CreateClient(0)
+	r := cache.CreateClient(0)
 	defer r.Close()
 
-	val, _ = r.Get(database.Ctx, id).Result()
+	val, _ = r.Get(cache.Ctx, id).Result()
 
 	if val != "" {
 		c.JSON(403, gin.H{
@@ -100,8 +100,8 @@ func ShortenURL(c *gin.Context) {
 		req.Expiry = 24
 	}
 
-	fmt.Println(database.Ctx, id, req.URL, req.Expiry*3600*time.Second)
-	err = r.Set(database.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
+	fmt.Println(cache.Ctx, id, req.URL, req.Expiry*3600*time.Second)
+	err = r.Set(cache.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
 
 	if err != nil {
 		c.JSON(500, gin.H{
@@ -117,12 +117,12 @@ func ShortenURL(c *gin.Context) {
 		XRateRemaining:  10,
 		XRateLimitReset: 30,
 	}
-	r2.Decr(database.Ctx, c.ClientIP())
+	r2.Decr(cache.Ctx, c.ClientIP())
 
-	val, _ = r2.Get(database.Ctx, c.ClientIP()).Result()
+	val, _ = r2.Get(cache.Ctx, c.ClientIP()).Result()
 	resp.XRateRemaining, _ = strconv.Atoi(val)
 
-	ttl, _ := r2.TTL(database.Ctx, c.ClientIP()).Result()
+	ttl, _ := r2.TTL(cache.Ctx, c.ClientIP()).Result()
 	resp.XRateLimitReset = ttl / time.Nanosecond / time.Minute
 
 	resp.CustomShort = os.Getenv("DOMAIN") + "/" + id

@@ -47,7 +47,6 @@ func main() {
 	router.POST("/api/shorten", routes.ShortenURL)
 
 	//User routes
-
 	user := router.Group("/user")
 	{
 		user.GET("/", GetAllUsers)

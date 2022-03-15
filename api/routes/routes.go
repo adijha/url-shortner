@@ -9,8 +9,8 @@ import (
 
 func InitializeRoutes(router *gin.Engine) {
 	// static UI routes
-	router.Static("/assets", "./public/assets")
-	router.LoadHTMLGlob("./public/index.html")
+	router.Static("/assets", "./view/assets")
+	router.LoadHTMLGlob("./view/index.html")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})

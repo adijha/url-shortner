@@ -9,7 +9,7 @@ import (
 func InitializeStaticRoutes(router *gin.Engine) {
 	router.Static("/assets", "./view/assets")
 	router.LoadHTMLGlob("./view/index.html")
-	//TODO: add favicon
+	router.StaticFile("/favicon.ico", "./view/assets/favicon.ico")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})

@@ -16,53 +16,6 @@ services:
     volumes:
       - .data:/data
 
-  # database:
-  #   container_name: database
-  #   image: postgres:12.8
-  #   restart: always
-  #   environment:
-  #     - POSTGRES_USER=pg
-  #     - POSTGRES_PASSWORD=pass
-  #     - POSTGRES_DB=urlshortner
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - database:/var/lib/postgresql/data 
-
-# volumes:
-#   database:
-
-  # postgres:
-  #   build: postgres
-  #   restart: always
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #     interval: 30s
-  #     timeout: 30s
-  #     retries: 3
-  #   environment:
-  #     - POSTGRES_PASSWORD=gorm
-  #     - POSTGRES_USER=gorm
-  #     - POSTGRES_DB=gorm
-  #     - POSTGRES_HOST=gorm
-
-  #     # - POSTGRES_USER=${DB_USER}  
-  #     # - POSTGRES_PASSWORD=${DB_PASSWORD}
-  #     # - POSTGRES_DB=${DB_NAME}
-  #     # - DATABASE_HOST=${DB_HOST} 
-  #   volumes:
-  #     - .database_data:/data
-  #   ports:
-  #     - 5432:5432
-
-
-
-
-  # Specify the version for docker-compose.yml
-# version: "3.8"
-
-# add the serivces needed (postgres,go)
-# services:
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -71,19 +24,11 @@ services:
       POSTGRES_PASSWORD: mypassword
       # Optional: Give a name to the database, otherwise
       # use the default value POSTGRES_USER as a database name (user in this case.)
-      # POSTGRES_DB: testdb
+      # POSTGRES_DB: url_shortener
     ports:
       - "5432:5432"
     volumes: 
       - dbdata:/var/lib/postgresql/data
-
-  # go:
-  #   container_name: go
-  #   # build the Dockerfile, alternatively use an image.
-  #   build:
-  #     context: .
-  #   depends_on:
-  #     - "postgres"
 
 volumes:
   dbdata: # create the volume for persisting data.

@@ -14,11 +14,10 @@ import (
 )
 
 var db *gorm.DB
-var err error
 
 func main() {
 	// Load environment variables
-	err = godotenv.Load()
+	err := godotenv.Load()
 
 	if err != nil {
 		fmt.Println(err)

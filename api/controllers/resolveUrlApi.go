@@ -17,6 +17,7 @@ func ResolveURL(c *gin.Context) {
 	// get the URL from the redis cache
 	val, err := r.Get(cache.Ctx, shortURL).Result()
 	if err == redis.Nil {
+		//TODO: redirect to homepage after a delay, and show delay counter
 		c.JSON(404, gin.H{
 			"error": "URL not found!",
 		})

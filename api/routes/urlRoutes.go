@@ -7,5 +7,8 @@ import (
 
 func InitializeUrlRoutes(router *gin.Engine) {
 	router.GET("/:url", controllers.ResolveURL)
-	router.POST("/api/shorten", controllers.ShortenURL)
+	url := router.Group("/url")
+	{
+		url.POST("/shorten", controllers.ShortenURL)
+	}
 }

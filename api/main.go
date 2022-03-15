@@ -16,7 +16,7 @@ import (
 var db *gorm.DB
 var err error
 
-type Person struct {
+type User struct {
 	ID        uint   `json:"id"`
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
@@ -33,23 +33,31 @@ func main() {
 
 	// init postgres database
 	db = database.InitDB()
-	db.AutoMigrate(&Person{})
+	db.AutoMigrate(&User{})
 	//router init
 	router := gin.Default()
-	//url shortener routes
+	// static UI routes
 	router.Static("/assets", "./public/assets")
 	router.LoadHTMLGlob("./public/index.html")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
+	//url shortener routes
 	router.GET("/:url", routes.ResolveURL)
 	router.POST("/api/shorten", routes.ShortenURL)
-	//postgres routes
-	router.GET("/people/", GetPeople)
-	router.GET("/people/:id", GetPerson)
-	router.POST("/people", CreatePerson)
-	router.PUT("/people/:id", UpdatePerson)
-	router.DELETE("/people/:id", DeletePerson)
+
+	//User routes
+
+	user := router.Group("/user")
+	{
+		user.GET("/", GetAllUsers)
+		user.GET("/:id", GetUser)
+		user.POST("/", CreateUser)
+		user.PUT("/:id", UpdateUser)
+		user.DELETE("/:id", DeleteUser)
+	}
+
+	// listen and serve
 	router.Run(os.Getenv("PORT"))
 
 	//close db
@@ -60,46 +68,46 @@ func main() {
 	defer dbSQL.Close()
 }
 
-func DeletePerson(c *gin.Context) {
+func DeleteUser(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var person Person
-	d := db.Where("id = ?", id).Delete(&person)
+	var user User
+	d := db.Where("id = ?", id).Delete(&user)
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})
 }
-func UpdatePerson(c *gin.Context) {
-	var person Person
+func UpdateUser(c *gin.Context) {
+	var user User
 	id := c.Params.ByName("id")
-	if err := db.Where("id = ?", id).First(&person).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	}
-	c.BindJSON(&person)
-	db.Save(&person)
-	c.JSON(200, person)
+	c.BindJSON(&user)
+	db.Save(&user)
+	c.JSON(200, user)
 }
-func CreatePerson(c *gin.Context) {
-	var person Person
-	c.BindJSON(&person)
-	db.Create(&person)
-	c.JSON(200, person)
+func CreateUser(c *gin.Context) {
+	var user User
+	c.BindJSON(&user)
+	db.Create(&user)
+	c.JSON(200, user)
 }
-func GetPerson(c *gin.Context) {
+func GetUser(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var person Person
-	if err := db.Where("id = ?", id).First(&person).Error; err != nil {
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
-		c.JSON(200, person)
+		c.JSON(200, user)
 	}
 }
-func GetPeople(c *gin.Context) {
-	var people []Person
-	if err := db.Find(&people).Error; err != nil {
+func GetAllUsers(c *gin.Context) {
+	var users []User
+	if err := db.Find(&users).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
-		c.JSON(200, people)
+		c.JSON(200, users)
 	}
 }

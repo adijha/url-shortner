@@ -15,8 +15,8 @@ func InitializeRoutes(router *gin.Engine) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 	//url shortener routes
-	router.GET("/:url", ResolveURL)
-	router.POST("/api/shorten", ShortenURL)
+	router.GET("/:url", controllers.ResolveURL)
+	router.POST("/api/shorten", controllers.ShortenURL)
 
 	//User routes
 	user := router.Group("/user")

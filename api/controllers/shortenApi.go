@@ -8,28 +8,16 @@ import (
 
 	"github.com/adijha/url-shortner/cache"
 	"github.com/adijha/url-shortner/helpers"
+	"github.com/adijha/url-shortner/request"
+	"github.com/adijha/url-shortner/response"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 )
 
-type request struct {
-	URL         string        `json:"url"`
-	CustomShort string        `json:"short"`
-	Expiry      time.Duration `json:"expiry"`
-}
-
-type response struct {
-	URL             string        `json:"url"`
-	CustomShort     string        `json:"short"`
-	Expiry          time.Duration `json:"expiry"`
-	XRateRemaining  int           `json:"rate_limit"`
-	XRateLimitReset time.Duration `json:"rate_limit_reset"`
-}
-
 func ShortenURL(c *gin.Context) {
-	var req request
+	var req request.Url
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
 			"error": "Invalid request body!",
@@ -110,7 +98,7 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	resp := response{
+	resp := response.Url{
 		URL:             req.URL,
 		CustomShort:     "",
 		Expiry:          req.Expiry,

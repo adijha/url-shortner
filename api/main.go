@@ -30,7 +30,7 @@ func main() {
 
 	//router init
 	router := gin.Default()
-	routes.InitializeRoutes(router,&db)
+	routes.InitializeRoutes(router)
 
 	// listen and serve
 	router.Run(os.Getenv("PORT"))

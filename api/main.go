@@ -30,11 +30,10 @@ func main() {
 	//router init
 	router := gin.Default()
 	routes.InitializeRoutes(router)
-
 	// listen and serve
 	router.Run(os.Getenv("PORT"))
 
-	//close db
+	//TODO: learn more about it, why we need to close DB connection? , do we even need it?
 	dbSQL, err := db.DB()
 	if err != nil {
 		defer dbSQL.Close()

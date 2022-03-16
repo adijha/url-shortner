@@ -8,4 +8,5 @@ type Url struct {
 	Expiry          time.Duration `json:"expiry"`
 	XRateRemaining  int           `json:"rate_limit"`
 	XRateLimitReset time.Duration `json:"rate_limit_reset"`
+	User_id         int           `json:"user_id"`
 }

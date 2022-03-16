@@ -104,6 +104,7 @@ func ShortenURL(c *gin.Context) {
 		Expiry:          req.Expiry,
 		XRateRemaining:  10,
 		XRateLimitReset: 30,
+		User_id:         req.User_id,
 	}
 	r2.Decr(cache.Ctx, c.ClientIP())
 

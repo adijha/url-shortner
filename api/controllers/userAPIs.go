@@ -3,9 +3,11 @@ package controllers
 import (
 	"fmt"
 
+	"github.com/adijha/url-shortner/cache"
 	"github.com/adijha/url-shortner/database"
 	"github.com/adijha/url-shortner/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 func DeleteUser(c *gin.Context) {
@@ -50,4 +52,42 @@ func GetAllUsers(c *gin.Context) {
 	} else {
 		c.JSON(200, users)
 	}
+}
+
+type URls struct {
+	User_id string `json:"user_id"`
+}
+
+func GetUrls(c *gin.Context) {
+
+	var req URls
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{
+			"error": "Invalid request body!",
+		})
+		return
+	}
+	//get user id
+	// userID := c.Param("id")
+
+	// get the redis client
+	r := cache.CreateClient(0)
+	defer r.Close()
+
+	val, err := r.Get(cache.Ctx, req.User_id).Result()
+	// val, err := r.Get(cache.Ctx, userID).Result()
+	if err == redis.Nil {
+		c.JSON(404, gin.H{
+			"error": "No URL found for user",
+			"id":    req.User_id,
+		})
+		return
+	} else if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Cannot connect to cache!",
+		})
+		return
+	}
+
+	c.JSON(200, val)
 }

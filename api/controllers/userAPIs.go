@@ -61,11 +61,9 @@ func GetAllUrls(c *gin.Context) {
 	}
 }
 
-func GetUrls(c *gin.Context) {
+func GetUrlsByUser(c *gin.Context) {
 	// get the short User Id from the request
-
 	userId := c.Param("user_id")
-
 	// get the url from the database
 	var urls []models.Url
 	if err := database.DB.Where("user_id = ?", userId).Find(&urls).Error; err != nil {
@@ -75,8 +73,7 @@ func GetUrls(c *gin.Context) {
 		c.JSON(200, urls)
 	}
 
-	// fmt.Println(userId)
-
+	//get ot from redis cache
 	// var keys []string
 	// keys = append(keys, "foo")
 	// keys = append(keys, "bar")

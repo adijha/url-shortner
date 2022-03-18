@@ -11,5 +11,6 @@ func InitializeUrlRoutes(router *gin.Engine) {
 	{
 		url.POST("/shorten", controllers.ShortenURL)
 		url.GET("/all", controllers.GetAllUrls)
+		url.GET("/:user_id", controllers.GetUrlsByUser)
 	}
 }

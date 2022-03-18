@@ -3,11 +3,9 @@ package controllers
 import (
 	"fmt"
 
-	"github.com/adijha/url-shortner/cache"
 	"github.com/adijha/url-shortner/database"
 	"github.com/adijha/url-shortner/models"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
 )
 
 func DeleteUser(c *gin.Context) {
@@ -66,33 +64,42 @@ func GetAllUrls(c *gin.Context) {
 func GetUrls(c *gin.Context) {
 	// get the short User Id from the request
 
-	// userId := c.Param("user_id")
+	userId := c.Param("user_id")
+
+	// get the url from the database
+	var urls []models.Url
+	if err := database.DB.Where("user_id = ?", userId).Find(&urls).Error; err != nil {
+		c.AbortWithStatus(404)
+		fmt.Println(err)
+	} else {
+		c.JSON(200, urls)
+	}
 
 	// fmt.Println(userId)
 
-	var keys []string
-	keys = append(keys, "foo")
-	keys = append(keys, "bar")
+	// var keys []string
+	// keys = append(keys, "foo")
+	// keys = append(keys, "bar")
 	// get the redis client
-	r := cache.CreateClient(0)
-	defer r.Close()
+	// r := cache.CreateClient(0)
+	// defer r.Close()
 
-	val, err := r.MGet(cache.Ctx, keys...).Result()
+	// val, err := r.MGet(cache.Ctx, keys...).Result()
 	// get urls from the redis cache
 	// val, err := r.Get(cache.Ctx, userId).Result()
-	if err == redis.Nil {
-		//TODO: redirect to homepage after a delay, and show delay counter
-		c.JSON(404, gin.H{
-			"error": "URL not found!",
-		})
-		return
-	} else if err != nil {
-		c.JSON(500, gin.H{
-			"error": "Cannot connect to cache!",
-		})
-		return
-	}
+	// if err == redis.Nil {
+	// 	//TODO: redirect to homepage after a delay, and show delay counter
+	// 	c.JSON(404, gin.H{
+	// 		"error": "URL not found!",
+	// 	})
+	// 	return
+	// } else if err != nil {
+	// 	c.JSON(500, gin.H{
+	// 		"error": "Cannot connect to cache!",
+	// 	})
+	// 	return
+	// }
 
-	c.JSON(200, val)
+	// c.JSON(200, val)
 
 }

@@ -54,32 +54,22 @@ func GetAllUsers(c *gin.Context) {
 	}
 }
 
-type URls struct {
-	User_id string `json:"user_id"`
-}
-
 func GetUrls(c *gin.Context) {
+	// get the short User Id from the request
 
-	var req URls
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{
-			"error": "Invalid request body!",
-		})
-		return
-	}
-	//get user id
-	// userID := c.Param("id")
+	userId := c.Param("user_id")
 
+	fmt.Println(userId)
 	// get the redis client
 	r := cache.CreateClient(0)
 	defer r.Close()
 
-	val, err := r.Get(cache.Ctx, req.User_id).Result()
-	// val, err := r.Get(cache.Ctx, userID).Result()
+	// get urls from the redis cache
+	val, err := r.Get(cache.Ctx, userId).Result()
 	if err == redis.Nil {
+		//TODO: redirect to homepage after a delay, and show delay counter
 		c.JSON(404, gin.H{
-			"error": "No URL found for user",
-			"id":    req.User_id,
+			"error": "URL not found!",
 		})
 		return
 	} else if err != nil {
@@ -90,4 +80,35 @@ func GetUrls(c *gin.Context) {
 	}
 
 	c.JSON(200, val)
+
+	// var req URls
+	// if err := c.ShouldBindJSON(&req); err != nil {
+	// 	c.JSON(400, gin.H{
+	// 		"error": "Invalid request body!",
+	// 	})
+	// 	return
+	// }
+	// //get user id
+	// // userID := c.Param("id")
+
+	// // get the redis client
+	// r := cache.CreateClient(0)
+	// defer r.Close()
+
+	// val, err := r.Get(cache.Ctx, req.User_id).Result()
+	// // val, err := r.Get(cache.Ctx, userID).Result()
+	// if err == redis.Nil {
+	// 	c.JSON(404, gin.H{
+	// 		"error": "No URL found for user",
+	// 		"id":    req.User_id,
+	// 	})
+	// 	return
+	// } else if err != nil {
+	// 	c.JSON(500, gin.H{
+	// 		"error": "Cannot connect to cache!",
+	// 	})
+	// 	return
+	// }
+
+	// c.JSON(200, val)
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/adijha/url-shortner/cache"
+	"github.com/adijha/url-shortner/database"
 	"github.com/adijha/url-shortner/helpers"
 	"github.com/adijha/url-shortner/request"
 	"github.com/adijha/url-shortner/response"
@@ -97,7 +98,10 @@ func ShortenURL(c *gin.Context) {
 		})
 		return
 	}
+	// update on postgres db also
+	database.DB.Create(&req)
 
+	// create custom response
 	resp := response.Url{
 		URL:             req.URL,
 		CustomShort:     "",
@@ -118,3 +122,10 @@ func ShortenURL(c *gin.Context) {
 
 	c.JSON(200, resp)
 }
+
+// func CreateURL(c *gin.Context, userID int, shortURL string, long string) {
+// 	var url models.Url
+// 	c.BindJSON(&url)
+// 	database.DB.Create(&url)
+// 	c.JSON(200, url)
+// }

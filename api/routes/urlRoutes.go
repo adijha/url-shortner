@@ -10,5 +10,6 @@ func InitializeUrlRoutes(router *gin.Engine) {
 	url := router.Group("/url")
 	{
 		url.POST("/shorten", controllers.ShortenURL)
+		url.GET("/all", controllers.GetAllUrls)
 	}
 }

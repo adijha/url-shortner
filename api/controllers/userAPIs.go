@@ -53,6 +53,15 @@ func GetAllUsers(c *gin.Context) {
 		c.JSON(200, users)
 	}
 }
+func GetAllUrls(c *gin.Context) {
+	var urls []models.Url
+	if err := database.DB.Find(&urls).Error; err != nil {
+		c.AbortWithStatus(404)
+		fmt.Println(err)
+	} else {
+		c.JSON(200, urls)
+	}
+}
 
 func GetUrls(c *gin.Context) {
 	// get the short User Id from the request

@@ -26,6 +26,7 @@ func main() {
 	// init postgres database
 	db = database.InitDB()
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Url{})
 
 	//router init
 	router := gin.Default()

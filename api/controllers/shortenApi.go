@@ -89,7 +89,6 @@ func ShortenURL(c *gin.Context) {
 		req.Expiry = 24
 	}
 
-	fmt.Println(cache.Ctx, id, req.URL, req.Expiry*3600*time.Second)
 	err = r.Set(cache.Ctx, id, req.URL, req.Expiry*3600*time.Second).Err()
 
 	if err != nil {

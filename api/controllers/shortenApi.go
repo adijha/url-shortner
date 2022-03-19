@@ -121,10 +121,3 @@ func ShortenURL(c *gin.Context) {
 
 	c.JSON(200, resp)
 }
-
-// func CreateURL(c *gin.Context, userID int, shortURL string, long string) {
-// 	var url models.Url
-// 	c.BindJSON(&url)
-// 	database.DB.Create(&url)
-// 	c.JSON(200, url)
-// }

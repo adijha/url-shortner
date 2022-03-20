@@ -7,16 +7,20 @@
 	import Team from './lib/Team.svelte'
 	import Services from './lib/Services.svelte'
 	import Footer from './lib/Footer.svelte'
+	import Container from './lib/Container.svelte'
 </script>
+
 <TailwindCss />
-<main class="max-w mx-auto px-4">
-<div class="pt-4 pb-12">
-  <Nav />
-  <Hero />
-  <Services />
-  <Team />
-  <Footer />
-  </div>
+<!-- class="max-w mx-auto px-4" -->
+<main>
+	<Container />
+	<!-- <div class="pt-4 pb-12"> -->
+	<!-- <Nav />
+		<Hero />
+		<Services />
+		<Team />
+		<Footer /> -->
+	<!-- </div> -->
 </main>
 
 <style>
@@ -26,39 +30,6 @@
 	}
 
 	main {
-		text-align: center;
-		padding: 1em;
 		margin: 0 auto;
-	}
-
-	img {
-		height: 16rem;
-		width: 16rem;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4rem;
-		font-weight: 100;
-		line-height: 1.1;
-		margin: 2rem auto;
-		max-width: 14rem;
-	}
-
-	p {
-		max-width: 14rem;
-		margin: 1rem auto;
-		line-height: 1.35;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			max-width: none;
-		}
-
-		p {
-			max-width: none;
-		}
 	}
 </style>
